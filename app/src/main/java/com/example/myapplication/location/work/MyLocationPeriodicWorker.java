@@ -13,6 +13,7 @@ import com.baidu.location.Poi;
 import com.baidu.location.PoiRegion;
 import com.baidu.location.service.LocService;
 import com.example.myapplication.location.LocationApplication;
+import com.example.myapplication.location.http.HttpManager;
 import com.example.myapplication.location.util.LogHelper;
 
 public class MyLocationPeriodicWorker extends Worker {
@@ -22,6 +23,7 @@ public class MyLocationPeriodicWorker extends Worker {
 
     public MyLocationPeriodicWorker(@NonNull Context context, @NonNull WorkerParameters params) {
         super(context, params);
+        LogHelper.log("---初始化MyLocationPeriodicWorker---");
     }
 
     @NonNull
@@ -36,18 +38,17 @@ public class MyLocationPeriodicWorker extends Worker {
     }
 
     private void onStart() {
-
-        locService = ((LocationApplication) getApplicationContext()).locService;
-        //获取locationservice实例，建议应用中只初始化1个location实例，然后使用，可以参考其他示例的activity，都是通过此种方式获取locationservice实例的
-        locService.registerListener(mListener);
+        if (locService == null) {
+            locService = ((LocationApplication) getApplicationContext()).locService;
+            //获取locationservice实例，建议应用中只初始化1个location实例，然后使用，可以参考其他示例的activity，都是通过此种方式获取locationservice实例的
+            locService.registerListener(mListener);
+        }
         //注册监听
 //        int type = getIntent().getIntExtra("from", 0);
 //        if (type == 0) {
 //            locService.setLocationOption(locService.getDefaultLocationClientOption());
 //        } else if (type == 1) {
-        if (!locService.isStart()) {
-            locService.start();
-        }
+        locService.start();
 
 //        }
 //        startLocation.setOnClickListener(new View.OnClickListener() {
@@ -73,6 +74,7 @@ public class MyLocationPeriodicWorker extends Worker {
             new Thread(() -> {
                 LogHelper.log("---定位的数据---");
                 LogHelper.log(str);
+                HttpManager.get(str);
             }).start();
         } catch (Exception e) {
             e.printStackTrace();

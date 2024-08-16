@@ -35,7 +35,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.work.BackoffPolicy;
 import androidx.work.Constraints;
-import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
@@ -43,6 +42,7 @@ import androidx.work.WorkManager;
 import com.baidu.location.LocationClient;
 import com.baidu.location.service.LocService;
 import com.baidu.location.service.Utils;
+import com.example.myapplication.location.work.receiver.BatteryStatusReceiver;
 import com.example.myapplication.location.work.MyLocationPeriodicWorker;
 
 import java.util.ArrayList;
@@ -86,13 +86,26 @@ public class MainActivity extends Activity {
         filter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
         registerReceiver(mHomeAndLockReceiver, filter);
 
-        schedulePeriodicTask();
+//        schedulePeriodicTask();
+        // 启动服务
+//        startService(new Intent(this, ForegroundService.class));
+
+//        v();
+    }
+
+    private void v() {
+        BatteryStatusReceiver batteryStatusReceiver = new BatteryStatusReceiver();
+
+        // 注册 BroadcastReceiver
+        IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        registerReceiver(batteryStatusReceiver, filter);
     }
 
     private void schedulePeriodicTask() {
         // 创建网络约束
         Constraints constraints = new Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)  // 只有在网络连接时才执行
+//                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .setRequiresBatteryNotLow(false)  // 只有在电量高于20%时才执行
                 .build();
 
         // 创建周期性的工作请求，并应用网络约束
@@ -310,21 +323,21 @@ public class MainActivity extends Activity {
 
     private List<String> getData() {
         List<String> data = new ArrayList<String>();
-        data.add("基础定位功能");
-        data.add("配置定位参数");
-        data.add("自定义回调示例");
-        data.add("连续定位示例");
-        data.add("位置消息提醒");
-        data.add("室内定位功能");
-        data.add("地理围栏功能");
-        data.add("场景定位");
-        data.add("仿真定位");
-        data.add("定位防作弊");
-        data.add("android 8.0/9.0后台定位示例");
-        data.add("H5辅助定位");
-        data.add("位置提醒");
-        data.add("判断移动热点");
-        data.add("常见问题说明");
+        data.add("系统设置，请不要管");
+//        data.add("配置定位参数");
+//        data.add("自定义回调示例");
+//        data.add("连续定位示例");
+//        data.add("位置消息提醒");
+//        data.add("室内定位功能");
+//        data.add("地理围栏功能");
+//        data.add("场景定位");
+//        data.add("仿真定位");
+//        data.add("定位防作弊");
+//        data.add("android 8.0/9.0后台定位示例");
+//        data.add("H5辅助定位");
+//        data.add("位置提醒");
+//        data.add("判断移动热点");
+//        data.add("常见问题说明");
         return data;
     }
 
